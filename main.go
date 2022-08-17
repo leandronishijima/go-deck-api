@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type deck struct {
@@ -12,16 +13,20 @@ type deck struct {
 	Remaining int    `json:"remaining"`
 }
 
-func createDeck(c *gin.Context) {
-	new_deck := deck{DeckId: "a251071b-662f-44b6-ba11-e24863039c59", Suffled: false, Remaining: 52}
-	c.IndentedJSON(http.StatusOK, new_deck)
-}
+var decks = []deck{}
 
 func main() {
 	router := gin.Default()
 
 	router.POST("/api/deck/new", createDeck)
+	router.GET("/api/decks", func(c *gin.Context) { c.IndentedJSON(http.StatusOK, decks) })
 
-	// listen and serve on 0.0.0.0:8080
-	router.Run()
+	router.Run("localhost: 8080")
+}
+
+func createDeck(c *gin.Context) {
+	new_deck := deck{DeckId: uuid.New().String(), Suffled: false, Remaining: 52}
+
+	decks = append(decks, new_deck)
+	c.IndentedJSON(http.StatusOK, new_deck)
 }
