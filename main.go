@@ -13,19 +13,29 @@ type deck struct {
 	Remaining int    `json:"remaining"`
 }
 
+type createDeckForm struct {
+	Shuffled bool
+}
+
 var decks = []deck{}
 
 func main() {
 	router := gin.Default()
 
-	router.POST("/api/deck/new", createDeck)
-	router.GET("/api/decks", func(c *gin.Context) { c.IndentedJSON(http.StatusOK, decks) })
+	api := router.Group("/api")
+	{
+		api.POST("/deck/new", createDeck)
+		api.GET("/decks", func(c *gin.Context) { c.IndentedJSON(http.StatusOK, decks) })
+	}
 
 	router.Run("localhost: 8080")
 }
 
 func createDeck(c *gin.Context) {
-	new_deck := deck{DeckId: uuid.New().String(), Suffled: false, Remaining: 52}
+	var req createDeckForm
+
+	c.BindJSON(&req)
+	new_deck := deck{DeckId: uuid.New().String(), Suffled: req.Shuffled, Remaining: 52}
 
 	decks = append(decks, new_deck)
 	c.IndentedJSON(http.StatusOK, new_deck)
