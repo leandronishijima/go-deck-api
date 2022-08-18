@@ -6,7 +6,7 @@ type Card struct {
 	Code  string `json:"code"`
 }
 
-var order = []string{"ACE", "2", "3", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
+var order = []string{"ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
 var suits_order = []string{"SPADES", "DIAMONDS", "CLUBS", "HEARTS"}
 
 func NewCard(value, suit string) *Card {
@@ -19,5 +19,12 @@ func NewCard(value, suit string) *Card {
 }
 
 func GenerateCards() []Card {
-	return []Card{}
+	cards := []Card{}
+	for _, value := range order {
+		for _, suit := range suits_order {
+			cards = append(cards, *NewCard(value, suit))
+		}
+	}
+
+	return cards
 }
