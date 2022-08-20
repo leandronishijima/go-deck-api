@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewDeckWithoutCardsParameter(t *testing.T) {
-	deck := NewDeck(false, nil)
+	deck, _ := NewDeck(false, nil)
 
 	assert.False(t, deck.Shuffled, "Property shuffled needs to be follow the parameter")
 	assert.NotNil(t, deck.DeckId, "DeckId should be not nil")
@@ -16,7 +16,7 @@ func TestNewDeckWithoutCardsParameter(t *testing.T) {
 }
 
 func TestNewDeckWithCardsParameter(t *testing.T) {
-	deck := NewDeck(false, []string{"AS", "AC", "2C", "KH"})
+	deck, _ := NewDeck(false, []string{"AS", "AC", "2C", "KH"})
 
 	cardsExpected := []Card{
 		{Value: "ACE", Suit: "SPADES", Code: "AS"},
@@ -33,7 +33,7 @@ func TestNewDeckWithCardsParameter(t *testing.T) {
 }
 
 func TestNewDeckWithShuffedParameter(t *testing.T) {
-	deck := NewDeck(true, []string{"AS", "AC", "2C", "KH"})
+	deck, _ := NewDeck(true, []string{"AS", "AC", "2C", "KH"})
 
 	cardsExpected := []Card{
 		{Value: "ACE", Suit: "SPADES", Code: "AS"},
@@ -47,6 +47,13 @@ func TestNewDeckWithShuffedParameter(t *testing.T) {
 	assert.Len(t, deck.Cards, 4, "Should be have all cards passed")
 	assert.Equal(t, deck.Remaining, 4, "Should be initialize with deck size")
 	assert.NotEqual(t, deck.Cards, cardsExpected, "Should be create all the cards from parameter")
+}
+
+func TestNewDeckWithInvalidCardCode(t *testing.T) {
+	deck, err := NewDeck(false, []string{"AAS", "AC", "2C", "KH"})
+
+	assert.Nil(t, deck)
+	assert.Equal(t, "All the cards must be valid", err.Error())
 }
 
 func allCards() []Card {

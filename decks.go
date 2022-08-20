@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"math/rand"
 
 	"github.com/google/uuid"
@@ -13,7 +14,15 @@ type Deck struct {
 	Cards     []Card `json:"cards"`
 }
 
-func NewDeck(shuffled bool, cards []string) *Deck {
+func NewDeck(shuffled bool, cards []string) (*Deck, error) {
+	if cards != nil {
+		for _, codeCard := range cards {
+			if !IsValidCode(codeCard) {
+				return nil, errors.New("All the cards must be valid")
+			}
+		}
+	}
+
 	deck := new(Deck)
 	deck.DeckId = uuid.NewString()
 	deck.Shuffled = shuffled
@@ -24,7 +33,7 @@ func NewDeck(shuffled bool, cards []string) *Deck {
 		shuffleDeck(deck.Cards)
 	}
 
-	return deck
+	return deck, nil
 }
 
 func generateCards(cards []string) []Card {

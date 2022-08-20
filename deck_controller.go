@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type createDeckForm struct {
@@ -14,15 +15,20 @@ func CreateDeck(c *gin.Context) {
 	var req createDeckForm
 
 	c.BindJSON(&req)
-	newDeck := NewDeck(req.Shuffled, req.Cards)
+	newDeck, err := NewDeck(req.Shuffled, req.Cards)
+	if err != nil {
+		c.IndentedJSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		decks = append(decks, *newDeck)
 
-	decks = append(decks, *newDeck)
-
-	c.IndentedJSON(http.StatusOK, gin.H{
-		"deck_id":   newDeck.DeckId,
-		"shuffled":  newDeck.Shuffled,
-		"remaining": newDeck.Remaining,
-	})
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"deck_id":   newDeck.DeckId,
+			"shuffled":  newDeck.Shuffled,
+			"remaining": newDeck.Remaining,
+		})
+	}
 }
 
 func OpenDeck(c *gin.Context) {

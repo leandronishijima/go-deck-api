@@ -12,11 +12,11 @@ import (
 )
 
 func TestCreateDeck(t *testing.T) {
-  response := callApi(http.MethodPost, "/api/deck/new", `{"shuffled": false}`)
+	response := callApi(http.MethodPost, "/api/deck/new", `{"shuffled": false}`)
 
 	assert.Equal(t, http.StatusOK, response.Code)
 
-  bodyRes := convertBodyToMap(response.Body.String())
+	bodyRes := convertBodyToMap(response.Body.String())
 
 	assert.NotNil(t, bodyRes["deck_id"])
 	assert.Equal(t, false, bodyRes["shuffled"])
@@ -24,25 +24,38 @@ func TestCreateDeck(t *testing.T) {
 }
 
 func TestCreateDeckWithShuffledTrueAndCards(t *testing.T) {
-  response := callApi(
-    http.MethodPost, 
-    "/api/deck/new", 
-    `{"shuffled": true, "cards": ["AS", "KD", "AC", "2C", "KH"]}`)
+	response := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": true, "cards": ["AS", "KD", "AC", "2C", "KH"]}`)
 
 	assert.Equal(t, http.StatusOK, response.Code)
 
-  bodyRes := convertBodyToMap(response.Body.String())
+	bodyRes := convertBodyToMap(response.Body.String())
 
 	assert.NotNil(t, bodyRes["deck_id"])
 	assert.Equal(t, true, bodyRes["shuffled"])
 	assert.Equal(t, float64(5), bodyRes["remaining"])
 }
- 
+
+func TestCreateDeckWithInvalidCards(t *testing.T) {
+	response := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["NOK"]}`)
+
+	assert.Equal(t, http.StatusBadRequest, response.Code)
+
+	bodyRes := convertBodyToMap(response.Body.String())
+
+	assert.Equal(t, "All the cards must be valid", bodyRes["error"])
+}
+
 func setupTestApi() (*gin.Engine, *httptest.ResponseRecorder) {
-  router := setupRouter()
+	router := setupRouter()
 	w := httptest.NewRecorder()
 
-  return router, w
+	return router, w
 }
 
 func makeBodyReq(param string) *bytes.Reader {
@@ -57,12 +70,12 @@ func callApi(method, uri, body string) *httptest.ResponseRecorder {
 
 	router.ServeHTTP(responseRecorder, req)
 
-  return responseRecorder
+	return responseRecorder
 }
 
 func convertBodyToMap(bodyString string) map[string]interface{} {
 	bodyRes := map[string]interface{}{}
 	json.Unmarshal([]byte(bodyString), &bodyRes)
 
-  return bodyRes
+	return bodyRes
 }
