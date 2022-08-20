@@ -54,8 +54,8 @@ func allCards() []Card {
 	suits := []string{"SPADES", "DIAMONDS", "CLUBS", "HEARTS"}
 
 	cards := []Card{}
-	for _, value := range values {
-		for _, suit := range suits {
+	for _, suit := range suits {
+		for _, value := range values {
 			cards = append(cards, *NewCard(value, suit))
 		}
 	}
