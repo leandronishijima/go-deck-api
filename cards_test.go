@@ -33,6 +33,7 @@ func TestNewCardByCode(t *testing.T) {
 		{"value": "JACK", "suit": "CLUBS", "code": "JC"},
 		{"value": "QUEEN", "suit": "DIAMONDS", "code": "QD"},
 		{"value": "10", "suit": "SPADES", "code": "10S"},
+		{"value": "KING", "suit": "HEARTS", "code": "KH"},
 	}
 
 	for _, test := range tableTest {
@@ -42,23 +43,4 @@ func TestNewCardByCode(t *testing.T) {
 		assert.Equal(t, card.Suit, test["suit"], fmt.Sprintf("Card suit should be %s", test["suit"]))
 		assert.Equal(t, card.Code, test["code"], "Card code should be the value and first letter of suit")
 	}
-
-}
-
-func TestGenerateCardsWithoutParams(t *testing.T) {
-	assert.Equal(t, GenerateCards(), allCards(), "GenerateCards without parameters should return all cards")
-}
-
-func allCards() []Card {
-	values := []string{"ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
-	suits := []string{"SPADES", "DIAMONDS", "CLUBS", "HEARTS"}
-
-	cards := []Card{}
-	for _, value := range values {
-		for _, suit := range suits {
-			cards = append(cards, *NewCard(value, suit))
-		}
-	}
-
-	return cards
 }

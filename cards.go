@@ -69,6 +69,9 @@ func getOrderByCode(code string) string {
 	case "Q":
 		return "QUEEN"
 
+	case "K":
+		return "KING"
+
 	default:
 		return code
 	}
@@ -90,15 +93,4 @@ func getSuitByCode(code string) string {
 	}
 
 	return code
-}
-
-func GenerateCards() []Card {
-	cards := []Card{}
-	for _, value := range order {
-		for _, suit := range suits_order {
-			cards = append(cards, *NewCard(value, suit))
-		}
-	}
-
-	return cards
 }
