@@ -22,6 +22,21 @@ func TestCreateDeck(t *testing.T) {
 	assert.Equal(t, false, bodyRes["shuffled"])
 	assert.Equal(t, float64(52), bodyRes["remaining"])
 }
+
+func TestCreateDeckWithShuffledTrueAndCards(t *testing.T) {
+  response := callApi(
+    http.MethodPost, 
+    "/api/deck/new", 
+    `{"shuffled": true, "cards": ["AS", "KD", "AC", "2C", "KH"]}`)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+
+  bodyRes := convertBodyToMap(response.Body.String())
+
+	assert.NotNil(t, bodyRes["deck_id"])
+	assert.Equal(t, true, bodyRes["shuffled"])
+	assert.Equal(t, float64(5), bodyRes["remaining"])
+}
  
 func setupTestApi() (*gin.Engine, *httptest.ResponseRecorder) {
   router := setupRouter()
@@ -37,8 +52,8 @@ func makeBodyReq(param string) *bytes.Reader {
 func callApi(method, uri, body string) *httptest.ResponseRecorder {
 	router, responseRecorder := setupTestApi()
 
-	bodyReader := makeBodyReq(`{"shuffled": false}`)
-	req, _ := http.NewRequest(method, "/api/deck/new", bodyReader)
+	bodyReader := makeBodyReq(body)
+	req, _ := http.NewRequest(method, uri, bodyReader)
 
 	router.ServeHTTP(responseRecorder, req)
 

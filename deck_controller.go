@@ -14,7 +14,7 @@ func CreateDeck(c *gin.Context) {
 	var req createDeckForm
 
 	c.BindJSON(&req)
-	newDeck := NewDeck(req.Shuffled, nil)
+	newDeck := NewDeck(req.Shuffled, req.Cards)
 
 	decks = append(decks, *newDeck)
 
