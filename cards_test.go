@@ -46,9 +46,10 @@ func TestNewCardByCode(t *testing.T) {
 }
 
 func TestIsValidCode(t *testing.T) {
-  assert.True(t, IsValidCode("AS"))
-  assert.True(t, IsValidCode("2S"))
-  assert.False(t, IsValidCode("33"))
-  assert.False(t, IsValidCode("AY"))
-  assert.False(t, IsValidCode("YYY"))
+	assert.True(t, IsValidCode("AS"))
+	assert.True(t, IsValidCode("2S"))
+	assert.False(t, IsValidCode("10A"))
+	assert.False(t, IsValidCode("33"))
+	assert.False(t, IsValidCode("AY"))
+	assert.False(t, IsValidCode("YYY"))
 }

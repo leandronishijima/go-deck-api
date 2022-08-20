@@ -34,13 +34,12 @@ func CreateDeck(c *gin.Context) {
 func OpenDeck(c *gin.Context) {
 	deckId := c.Param("deck_id")
 
-	var deckFound Deck
 	for _, deck := range decks {
 		if deck.DeckId == deckId {
-			deckFound = deck
-			break
+			c.IndentedJSON(http.StatusOK, deck)
+			return
 		}
 	}
 
-	c.IndentedJSON(http.StatusOK, deckFound)
+	c.String(http.StatusNotFound, "Deck not found")
 }
