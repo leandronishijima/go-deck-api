@@ -10,12 +10,13 @@ func TestGenerateCardsWithoutParams(t *testing.T) {
 }
 
 func TestGenerateCardsWithParams(t *testing.T) {
-	cards := []string{"AS", "AC", "2C"}
+	cards := []string{"AS", "AC", "2C", "KH"}
 
 	expected := []Card{
 		{Value: "ACE", Suit: "SPADES", Code: "AS"},
 		{Value: "ACE", Suit: "CLUBS", Code: "AC"},
 		{Value: "2", Suit: "CLUBS", Code: "2C"},
+		{Value: "KING", Suit: "HEARTS", Code: "KH"},
 	}
 
 	assert.Equal(t, GenerateCards(cards), expected, "GenerateCards with parameters should return all cards declared")
