@@ -1,16 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestNewCard(t *testing.T) {
-	card := NewCard("ACE", "SPADES")
+	tableTest := []map[string]string{
+		{"value": "ACE", "suit": "SPADES", "code": "AS"},
+		{"value": "2", "suit": "SPADES", "code": "2S"},
+		{"value": "9", "suit": "SPADES", "code": "9S"},
+		{"value": "JACK", "suit": "CLUBS", "code": "JC"},
+		{"value": "QUEEN", "suit": "DIAMONDS", "code": "QD"},
+		{"value": "10", "suit": "SPADES", "code": "10S"},
+	}
 
-	assert.Equal(t, card.Value, "ACE", "Card value needs to be ACE")
-	assert.Equal(t, card.Suit, "SPADES", "Card suit needs to be SPADES")
-	assert.Equal(t, card.Code, "AS", "Card code needs to be the fist value from value and first letter of suit")
+	for _, test := range tableTest {
+		card := NewCard(test["value"], test["suit"])
+
+		assert.Equal(t, card.Value, test["value"], fmt.Sprintf("Card value should be %s", test["value"]))
+		assert.Equal(t, card.Suit, test["suit"], fmt.Sprintf("Card suit should be %s", test["suit"]))
+		assert.Equal(t, card.Code, test["code"], "Card code should be the value and first letter of suit")
+	}
+}
+
+func TestNewCardByCode(t *testing.T) {
+	tableTest := []map[string]string{
+		{"value": "ACE", "suit": "SPADES", "code": "AS"},
+		{"value": "2", "suit": "SPADES", "code": "2S"},
+		{"value": "9", "suit": "SPADES", "code": "9S"},
+		{"value": "JACK", "suit": "CLUBS", "code": "JC"},
+		{"value": "QUEEN", "suit": "DIAMONDS", "code": "QD"},
+		{"value": "10", "suit": "SPADES", "code": "10S"},
+	}
+
+	for _, test := range tableTest {
+		card := NewCardByCode(test["code"])
+
+		assert.Equal(t, card.Value, test["value"], fmt.Sprintf("Card value should be %s", test["value"]))
+		assert.Equal(t, card.Suit, test["suit"], fmt.Sprintf("Card suit should be %s", test["suit"]))
+		assert.Equal(t, card.Code, test["code"], "Card code should be the value and first letter of suit")
+	}
+
 }
 
 func TestGenerateCardsWithoutParams(t *testing.T) {
