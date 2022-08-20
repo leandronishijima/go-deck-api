@@ -7,7 +7,7 @@ import (
 
 var decks = []Deck{}
 
-func main() {
+func setupRouter() *gin.Engine {
 	router := gin.Default()
 
 	api := router.Group("/api")
@@ -17,5 +17,10 @@ func main() {
 		api.GET("/decks", func(c *gin.Context) { c.IndentedJSON(http.StatusOK, decks) })
 	}
 
+	return router
+}
+
+func main() {
+	router := setupRouter()
 	router.Run("localhost:8080")
 }
