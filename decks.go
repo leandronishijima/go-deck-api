@@ -1,10 +1,21 @@
 package main
 
+import "github.com/google/uuid"
+
 type Deck struct {
 	DeckId    string `json:"deck_id"`
 	Suffled   bool   `json:"suffled"`
 	Remaining int    `json:"remaining"`
 	Cards     []Card `json:"cards"`
+}
+
+func NewDeck(suffled bool, cards []string) *Deck {
+	deck := new(Deck)
+	deck.DeckId = uuid.NewString()
+	deck.Suffled = suffled
+	deck.Cards = GenerateCards(cards)
+
+	return deck
 }
 
 func GenerateCards(cards []string) []Card {
