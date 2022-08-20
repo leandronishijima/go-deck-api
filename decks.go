@@ -18,6 +18,7 @@ func NewDeck(shuffled bool, cards []string) *Deck {
 	deck.DeckId = uuid.NewString()
 	deck.Shuffled = shuffled
 	deck.Cards = generateCards(cards)
+	deck.Remaining = len(deck.Cards)
 
 	if shuffled {
 		shuffleDeck(deck.Cards)
