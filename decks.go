@@ -13,12 +13,12 @@ func NewDeck(suffled bool, cards []string) *Deck {
 	deck := new(Deck)
 	deck.DeckId = uuid.NewString()
 	deck.Suffled = suffled
-	deck.Cards = GenerateCards(cards)
+	deck.Cards = generateCards(cards)
 
 	return deck
 }
 
-func GenerateCards(cards []string) []Card {
+func generateCards(cards []string) []Card {
 	if cards == nil {
 		return generateFullDeck()
 	} else {

@@ -5,23 +5,6 @@ import (
 	"testing"
 )
 
-func TestGenerateCardsWithoutParams(t *testing.T) {
-	assert.Equal(t, GenerateCards(nil), allCards(), "GenerateCards without parameters should return all cards")
-}
-
-func TestGenerateCardsWithParams(t *testing.T) {
-	cards := []string{"AS", "AC", "2C", "KH"}
-
-	expected := []Card{
-		{Value: "ACE", Suit: "SPADES", Code: "AS"},
-		{Value: "ACE", Suit: "CLUBS", Code: "AC"},
-		{Value: "2", Suit: "CLUBS", Code: "2C"},
-		{Value: "KING", Suit: "HEARTS", Code: "KH"},
-	}
-
-	assert.Equal(t, GenerateCards(cards), expected, "GenerateCards with parameters should return all cards declared")
-}
-
 func TestNewDeckWithoutCardsParameter(t *testing.T) {
 	deck := NewDeck(false, nil)
 
