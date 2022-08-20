@@ -44,3 +44,11 @@ func TestNewCardByCode(t *testing.T) {
 		assert.Equal(t, card.Code, test["code"], "Card code should be the value and first letter of suit")
 	}
 }
+
+func TestIsValidCode(t *testing.T) {
+  assert.True(t, IsValidCode("AS"))
+  assert.True(t, IsValidCode("2S"))
+  assert.False(t, IsValidCode("33"))
+  assert.False(t, IsValidCode("AY"))
+  assert.False(t, IsValidCode("YYY"))
+}

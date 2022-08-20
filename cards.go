@@ -8,7 +8,7 @@ type Card struct {
 	Code  string `json:"code"`
 }
 
-var order = []string{"ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
+var orders = []string{"ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
 var suits_order = []string{"SPADES", "DIAMONDS", "CLUBS", "HEARTS"}
 
 func NewCard(value, suit string) *Card {
@@ -29,6 +29,26 @@ func NewCardByCode(code string) *Card {
 	card.Code = code
 
 	return card
+}
+
+func IsValidCode(code string) bool {
+  order, suit := getCardByCode(code)
+
+  var orderValid bool
+  for _, o := range orders {
+    if o == order {
+      orderValid = true
+    }
+  }
+
+  var suitValid bool
+  for _, s := range suits_order {
+    if s == suit {
+      suitValid = true
+    }
+  }
+
+  return orderValid && suitValid
 }
 
 func (card *Card) setCode(value, suit string) {

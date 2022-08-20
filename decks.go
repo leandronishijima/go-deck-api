@@ -44,7 +44,7 @@ func shuffleDeck(cards []Card) {
 func generateFullDeck() []Card {
 	cards := []Card{}
 	for _, suit := range suits_order {
-		for _, value := range order {
+		for _, value := range orders {
 			cards = append(cards, *NewCard(value, suit))
 		}
 	}
