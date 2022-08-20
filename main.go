@@ -30,7 +30,7 @@ func createDeck(c *gin.Context) {
 	var req createDeckForm
 
 	c.BindJSON(&req)
-	new_deck := Deck{DeckId: uuid.New().String(), Suffled: req.Shuffled, Remaining: 52}
+	new_deck := Deck{DeckId: uuid.New().String(), Shuffled: req.Shuffled, Remaining: 52}
 
 	decks = append(decks, new_deck)
 	c.IndentedJSON(http.StatusOK, new_deck)

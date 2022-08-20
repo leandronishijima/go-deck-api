@@ -1,19 +1,27 @@
 package main
 
-import "github.com/google/uuid"
+import (
+	"math/rand"
+
+	"github.com/google/uuid"
+)
 
 type Deck struct {
 	DeckId    string `json:"deck_id"`
-	Suffled   bool   `json:"suffled"`
+	Shuffled  bool   `json:"shuffled"`
 	Remaining int    `json:"remaining"`
 	Cards     []Card `json:"cards"`
 }
 
-func NewDeck(suffled bool, cards []string) *Deck {
+func NewDeck(shuffled bool, cards []string) *Deck {
 	deck := new(Deck)
 	deck.DeckId = uuid.NewString()
-	deck.Suffled = suffled
+	deck.Shuffled = shuffled
 	deck.Cards = generateCards(cards)
+
+	if shuffled {
+		shuffleDeck(deck.Cards)
+	}
 
 	return deck
 }
@@ -24,6 +32,12 @@ func generateCards(cards []string) []Card {
 	} else {
 		return generateDeck(cards)
 	}
+}
+
+func shuffleDeck(cards []Card) {
+	rand.Shuffle(len(cards), func(i, j int) {
+		cards[i], cards[j] = cards[j], cards[i]
+	})
 }
 
 func generateFullDeck() []Card {
