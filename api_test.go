@@ -94,6 +94,32 @@ func TestOpenDeckWhenDeckIdDoesntExist(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, responseGet.Code)
 }
 
+func TestDrawCard(t *testing.T) {
+	responseCreate := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["AS", "KD", "QH"]}`)
+
+	bodyRes := convertBodyToMap(responseCreate.Body.String())
+	deckId := bodyRes["deck_id"]
+
+	responseDraw := callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 1}`,
+	)
+
+	bodyResDraw := convertBodyToMap(responseDraw.Body.String())
+
+	assert.Equal(t, http.StatusOK, responseDraw.Code)
+
+	cards := []interface{}([]interface{}{
+		map[string]interface{}{"code": "AS", "suit": "SPADES", "value": "ACE"},
+	})
+
+	assert.Equal(t, cards, bodyResDraw["cards"])
+}
+
 func setupTestApi() (*gin.Engine, *httptest.ResponseRecorder) {
 	router := setupRouter()
 	w := httptest.NewRecorder()

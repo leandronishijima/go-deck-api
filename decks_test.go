@@ -56,6 +56,33 @@ func TestNewDeckWithInvalidCardCode(t *testing.T) {
 	assert.Equal(t, "All the cards must be valid", err.Error())
 }
 
+func TestDraw(t *testing.T) {
+	deck, _ := NewDeck(false, []string{"AS", "KD", "AC", "2C", "KH"})
+
+	cardsExpected := []Card{
+		{Value: "ACE", Suit: "SPADES", Code: "AS"},
+		{Value: "KING", Suit: "DIAMONDS", Code: "KD"},
+		{Value: "ACE", Suit: "CLUBS", Code: "AC"},
+		{Value: "2", Suit: "CLUBS", Code: "2C"},
+		{Value: "KING", Suit: "HEARTS", Code: "KH"},
+	}
+	assert.Equal(t, cardsExpected, deck.Cards)
+	assert.Equal(t, 5, deck.Remaining)
+
+	drawCardExpected := []Card{{Value: "ACE", Suit: "SPADES", Code: "AS"}}
+	assert.Equal(t, drawCardExpected, deck.DrawCard(1))
+
+	cardsExpectedAfterDraw := []Card{
+		{Value: "KING", Suit: "DIAMONDS", Code: "KD"},
+		{Value: "ACE", Suit: "CLUBS", Code: "AC"},
+		{Value: "2", Suit: "CLUBS", Code: "2C"},
+		{Value: "KING", Suit: "HEARTS", Code: "KH"},
+	}
+
+	assert.Equal(t, cardsExpectedAfterDraw, deck.Cards)
+	assert.Equal(t, 4, deck.Remaining)
+}
+
 func allCards() []Card {
 	values := []string{"ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"}
 	suits := []string{"SPADES", "DIAMONDS", "CLUBS", "HEARTS"}

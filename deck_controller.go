@@ -11,6 +11,10 @@ type createDeckForm struct {
 	Cards    []string
 }
 
+type drawDeckForm struct {
+	Count int
+}
+
 func CreateDeck(c *gin.Context) {
 	var req createDeckForm
 
@@ -42,4 +46,23 @@ func OpenDeck(c *gin.Context) {
 	}
 
 	c.String(http.StatusNotFound, "Deck not found")
+}
+
+func DrawCard(c *gin.Context) {
+	var req drawDeckForm
+	c.BindJSON(&req)
+	deckId := c.Param("deck_id")
+
+	var cardsDraw []Card
+	for index, d := range decks {
+		if d.DeckId == deckId {
+			cardsDraw = d.DrawCard(req.Count)
+			decks[index] = d
+			break
+		}
+	}
+
+	c.IndentedJSON(http.StatusOK, gin.H{
+		"cards": cardsDraw,
+	})
 }

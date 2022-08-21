@@ -36,6 +36,15 @@ func NewDeck(shuffled bool, cards []string) (*Deck, error) {
 	return deck, nil
 }
 
+func (deck *Deck) DrawCard(count int) []Card {
+	cards := deck.Cards[0:count]
+
+	deck.Cards = deck.Cards[count:len(deck.Cards)]
+	deck.Remaining = len(deck.Cards)
+
+	return cards
+}
+
 func generateCards(cards []string) []Card {
 	if cards == nil {
 		return generateFullDeck()
