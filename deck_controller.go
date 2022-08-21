@@ -56,7 +56,17 @@ func DrawCard(c *gin.Context) {
 	var cardsDraw []Card
 	for index, d := range decks {
 		if d.DeckId == deckId {
-			cardsDraw = d.DrawCard(req.Count)
+			cardsDrawReturn, err := d.DrawCard(req.Count)
+
+			if err != nil {
+				c.IndentedJSON(http.StatusUnprocessableEntity, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			cardsDraw = cardsDrawReturn
+
 			decks[index] = d
 			break
 		}

@@ -120,6 +120,68 @@ func TestDrawCard(t *testing.T) {
 	assert.Equal(t, cards, bodyResDraw["cards"])
 }
 
+func TestDrawAllCards(t *testing.T) {
+	responseCreate := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["AS", "KD", "QH"]}`)
+
+	bodyRes := convertBodyToMap(responseCreate.Body.String())
+	deckId := bodyRes["deck_id"]
+
+	responseDraw := callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 3}`,
+	)
+
+	bodyResDraw := convertBodyToMap(responseDraw.Body.String())
+
+	assert.Equal(t, http.StatusOK, responseDraw.Code)
+
+	cards := []interface{}([]interface{}{
+		map[string]interface{}{"code": "AS", "suit": "SPADES", "value": "ACE"},
+		map[string]interface{}{"code": "KD", "suit": "DIAMONDS", "value": "KING"},
+		map[string]interface{}{"code": "QH", "suit": "HEARTS", "value": "QUEEN"},
+	})
+
+	assert.Equal(t, cards, bodyResDraw["cards"])
+}
+
+func TestDrawCardSequence(t *testing.T) {
+	responseCreate := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["AS", "KD"]}`)
+
+	bodyRes := convertBodyToMap(responseCreate.Body.String())
+	deckId := bodyRes["deck_id"]
+
+	_ = callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 1}`,
+	)
+
+	_ = callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 1}`,
+	)
+
+	responseGet := callApi(
+		http.MethodGet,
+		fmt.Sprintf("/api/deck/open/%s", deckId),
+		"")
+
+	bodyResGet := convertBodyToMap(responseGet.Body.String())
+
+	assert.Equal(t, deckId, bodyResGet["deck_id"])
+	assert.Equal(t, float64(0), bodyResGet["remaining"])
+
+	assert.Equal(t, []interface{}([]interface{}{}), bodyResGet["cards"])
+}
+
 func setupTestApi() (*gin.Engine, *httptest.ResponseRecorder) {
 	router := setupRouter()
 	w := httptest.NewRecorder()

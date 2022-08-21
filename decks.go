@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"math/rand"
 
 	"github.com/google/uuid"
@@ -36,13 +37,25 @@ func NewDeck(shuffled bool, cards []string) (*Deck, error) {
 	return deck, nil
 }
 
-func (deck *Deck) DrawCard(count int) []Card {
-	cards := deck.Cards[0:count]
+func (deck *Deck) DrawCard(count int) ([]Card, error) {
+	if deck.Remaining == 0 {
+		return nil,
+			errors.New("The deck is empty")
+	}
 
-	deck.Cards = deck.Cards[count:len(deck.Cards)]
-	deck.Remaining = len(deck.Cards)
+	if count > deck.Remaining {
+		return nil,
+			errors.New(fmt.Sprintf(
+				"Number invalid of cards to draw, available: %d",
+				deck.Remaining))
+	} else {
+		cards := deck.Cards[0:count]
 
-	return cards
+		deck.Cards = deck.Cards[count:len(deck.Cards)]
+		deck.Remaining = len(deck.Cards)
+
+		return cards, nil
+	}
 }
 
 func generateCards(cards []string) []Card {

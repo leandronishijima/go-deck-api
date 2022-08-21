@@ -70,7 +70,8 @@ func TestDraw(t *testing.T) {
 	assert.Equal(t, 5, deck.Remaining)
 
 	drawCardExpected := []Card{{Value: "ACE", Suit: "SPADES", Code: "AS"}}
-	assert.Equal(t, drawCardExpected, deck.DrawCard(1))
+	drawCards, _ := deck.DrawCard(1)
+	assert.Equal(t, drawCardExpected, drawCards)
 
 	cardsExpectedAfterDraw := []Card{
 		{Value: "KING", Suit: "DIAMONDS", Code: "KD"},
@@ -81,6 +82,23 @@ func TestDraw(t *testing.T) {
 
 	assert.Equal(t, cardsExpectedAfterDraw, deck.Cards)
 	assert.Equal(t, 4, deck.Remaining)
+}
+
+func TestDrawCountAboveTheNumberOfCardsInDeck(t *testing.T) {
+	deck, _ := NewDeck(false, []string{"AS", "KD"})
+
+	_, err := deck.DrawCard(3)
+
+	assert.Equal(t, "Number invalid of cards to draw, available: 2", err.Error())
+}
+
+func TestDrawWhenTheDeckIsEmpty(t *testing.T) {
+	deck, _ := NewDeck(false, []string{"AS"})
+	deck.DrawCard(1)
+
+	_, err := deck.DrawCard(1)
+
+	assert.Equal(t, "The deck is empty", err.Error())
 }
 
 func allCards() []Card {
