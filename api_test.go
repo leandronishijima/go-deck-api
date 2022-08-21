@@ -182,6 +182,54 @@ func TestDrawCardSequence(t *testing.T) {
 	assert.Equal(t, []interface{}([]interface{}{}), bodyResGet["cards"])
 }
 
+func TestDrawCardsAboveTheCapacity(t *testing.T) {
+	responseCreate := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["AS"]}`)
+
+	bodyRes := convertBodyToMap(responseCreate.Body.String())
+	deckId := bodyRes["deck_id"]
+
+	responseDraw := callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 2}`,
+	)
+
+	bodyResDraw := convertBodyToMap(responseDraw.Body.String())
+
+	assert.Equal(t, http.StatusUnprocessableEntity, responseDraw.Code)
+	assert.Equal(t, "Number invalid of cards to draw, available: 1", bodyResDraw["error"])
+}
+
+func TestTryToDrawCardsFromEmptyDeck(t *testing.T) {
+	responseCreate := callApi(
+		http.MethodPost,
+		"/api/deck/new",
+		`{"shuffled": false, "cards": ["AS"]}`)
+
+	bodyRes := convertBodyToMap(responseCreate.Body.String())
+	deckId := bodyRes["deck_id"]
+
+	callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 1}`,
+	)
+
+	response := callApi(
+		http.MethodPatch,
+		fmt.Sprintf("/api/deck/%s/draw", deckId),
+		`{"count": 1}`,
+	)
+
+	bodyResError := convertBodyToMap(response.Body.String())
+
+	assert.Equal(t, http.StatusUnprocessableEntity, response.Code)
+	assert.Equal(t, "The deck is empty", bodyResError["error"])
+}
+
 func setupTestApi() (*gin.Engine, *httptest.ResponseRecorder) {
 	router := setupRouter()
 	w := httptest.NewRecorder()
