@@ -1,5 +1,7 @@
 # Go Deck API
 
+API to handle and cards to be used in card games.
+
 ## API Reference
 
 ### Create a new deck
@@ -14,7 +16,7 @@
 | cards    | optional | Cards that will be used in the deck | -             | ["AS", "QS", "10H"] |
 
 - Example request:
-```curl
+```bash
 curl -X "POST" "http://localhost:8080/api/deck/new" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
@@ -42,9 +44,13 @@ curl -X "POST" "http://localhost:8080/api/deck/new" \
   GET /api/deck/open/${deck_id}
 ```
 
+| Name    | Required | Description        | Default value | Example                                |
+| ------- | -------- | ------------------ | ------------- | -------------------------------------- |
+| deck id | required | the deck id (uuid) | -             | "2d4ee730-94cc-4585-b02d-47238aee59f9" |
+
 - Example request
-```curl
-curl "http://localhost:8080/api/deck/open/deck_id_uuid"
+```bash
+curl "http://localhost:8080/api/deck/open/${deck_id}"
 ```
 
 - Response:
@@ -79,9 +85,14 @@ curl "http://localhost:8080/api/deck/open/deck_id_uuid"
   PATCH /api/deck/${deck_id}/draw
 ```
 
+| Name    | Required | Description                          | Default value | Example                                |
+| ------- | -------- | ------------------------------------ | ------------- | -------------------------------------- |
+| deck id | required | the deck id (uuid)                   | -             | "2d4ee730-94cc-4585-b02d-47238aee59f9" |
+| count   | required | How many cards to draw from the deck | -             | 3                                      |
+
 - Example request
-```curl
-curl -X "PATCH" "http://localhost:8080/api/deck/deck_id_uuid/draw" \
+```bash
+curl -X "PATCH" "http://localhost:8080/api/deck/${deck_id}/draw" \
      -H 'Content-Type: application/json; charset=utf-8' \
      -d $'{
   "count": 1
@@ -109,4 +120,18 @@ curl -X "PATCH" "http://localhost:8080/api/deck/deck_id_uuid/draw" \
     }
   ]
 }
+```
+
+## Run locally
+
+```sh
+go run .
+```
+
+- The API will be available in the http://localhost:8080 
+
+## Run tests
+
+```sh
+go test
 ```
