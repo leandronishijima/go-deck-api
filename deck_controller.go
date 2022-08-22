@@ -12,7 +12,7 @@ type createDeckForm struct {
 }
 
 type drawDeckForm struct {
-	Count int
+	Count int `json:"count" binding:"required"`
 }
 
 func CreateDeck(c *gin.Context) {
@@ -50,8 +50,12 @@ func OpenDeck(c *gin.Context) {
 
 func DrawCard(c *gin.Context) {
 	var req drawDeckForm
-	c.BindJSON(&req)
 	deckId := c.Param("deck_id")
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	var cardsDraw []Card
 	for index, d := range decks {

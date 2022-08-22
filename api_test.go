@@ -203,6 +203,16 @@ func TestDrawCardsAboveTheCapacity(t *testing.T) {
 	assert.Equal(t, "Number invalid of cards to draw, available: 1", bodyResDraw["error"])
 }
 
+func TestTryToDrawCardWithoutCountParam(t *testing.T) {
+	response := callApi(
+		http.MethodPatch,
+		"/api/deck/1/draw",
+		"",
+	)
+
+	assert.Equal(t, http.StatusBadRequest, response.Code)
+}
+
 func TestTryToDrawCardsFromEmptyDeck(t *testing.T) {
 	responseCreate := callApi(
 		http.MethodPost,
