@@ -53,7 +53,7 @@ func DrawCard(c *gin.Context) {
 	deckId := c.Param("deck_id")
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Parameter 'count' is required"})
 		return
 	}
 

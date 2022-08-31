@@ -211,6 +211,7 @@ func TestTryToDrawCardWithoutCountParam(t *testing.T) {
 	)
 
 	assert.Equal(t, http.StatusBadRequest, response.Code)
+	assert.Equal(t, "{\"error\":\"Parameter 'count' is required\"}", response.Body.String())
 }
 
 func TestTryToDrawCardsFromEmptyDeck(t *testing.T) {
